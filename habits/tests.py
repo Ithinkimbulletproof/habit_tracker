@@ -64,6 +64,8 @@ class HabitTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["id"], self.habit_pleasent.id)
 
+    import json
+
     def test_update_habit(self):
         response = self.client.get(
             f"/habits/{self.habit_pleasent.id}/")
@@ -79,13 +81,15 @@ class HabitTestCase(APITestCase):
             "owner": self.user.id,
             "time_for_habit": "2024-07-17T12:00:00Z",
             "last_remember": "2024-07-17T12:00:00Z",
+            "reward_content_type": 1,
+            "reward_object_id": 123,
         }
 
         data_for_matches = response.data
 
         response = self.client.put(
             f"/habits/{self.habit_pleasent.id}/",
-            data,
+            json.dumps(data),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
