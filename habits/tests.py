@@ -65,7 +65,8 @@ class HabitTestCase(APITestCase):
         self.assertEqual(response.data["id"], self.habit_pleasent.id)
 
     def test_update_habit(self):
-        response = self.client.get(f"/habits/{self.habit_pleasent.id}/")
+        response = self.client.get(
+            f"/habits/{self.habit_pleasent.id}/")
         self.assertEqual(response.status_code, 200)
 
         data = {
@@ -75,16 +76,22 @@ class HabitTestCase(APITestCase):
             "time_to_complete": "00:00:40",
             "is_pleasent": True,
             "is_public": True,
-            "owner": self.user,
-            "time_for_habit": "2024-07-17T12:00",
-            "last_remember": "2024-07-17T12:00",
+            "owner": self.user.id,
+            "time_for_habit": "2024-07-17T12:00:00Z",
+            "last_remember": "2024-07-17T12:00:00Z",
         }
 
         data_for_matches = response.data
 
-        self.client.put(f"/habits/{self.habit_pleasent.id}/", data)
+        response = self.client.put(
+            f"/habits/{self.habit_pleasent.id}/",
+            data,
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, 200)
 
-        response = self.client.get(f"/habits/{self.habit_pleasent.id}/")
+        response = self.client.get(
+            f"/habits/{self.habit_pleasent.id}/")
         self.assertEqual(response.status_code, 200)
         self.assertNotEqual(response.data, data_for_matches)
 
